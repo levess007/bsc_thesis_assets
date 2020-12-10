@@ -1,0 +1,40 @@
+# This file describes the network interfaces available on your system
+# For more information, see netplan(5).
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    cluster:
+      match:
+        macaddress: 54:04:a6:b4:ea:dc 
+      dhcp4: yes
+      set-name: clr0
+    management:
+      match:
+        macaddress: 00:26:55:d0:14:16
+      dhcp4: yes
+      set-name: mgmt0
+      dhcp4-overrides:
+        use-routes: false
+  vlans:
+    vlan100:
+      id: 100
+      link: cluster
+    vlan200:
+      id: 200
+      link: cluster
+    vlan201:
+      id: 201
+      link: cluster
+    vlan202:
+      id: 202
+      link: cluster
+    vlan203:
+      id: 203
+      link: cluster
+    vlan204:
+      id: 204
+      link: cluster
+    vlan205:
+      id: 205
+      link: cluster

@@ -1,0 +1,60 @@
+# Define a pod with macvlan-conf, defined above, with ip address and mac, and 
+# "gateway" overrides default gateway to use macvlan-conf's one. 
+# without "gateway" in k8s.v1.cni.cncf.io/networks, default route will be cluster
+# network interface, eth0, even tough macvlan-conf has default gateway config.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fe1
+  annotations:
+    k8s.v1.cni.cncf.io/networks: '[
+            { "name": "macvlan100",
+              "ips": [ "10.100.0.1/24" ],
+              "mac": "c2:b0:57:49:47:f1",
+              "gateway": [ "10.100.0.254" ],
+              "default-route": ["10.100.0.254" ]
+            },
+            { "name": "macvlan200",
+              "ips": [ "10.200.0.1/24" ],
+              "mac": "c2:b0:57:49:47:f2"
+            },
+            { "name": "macvlan201",
+              "ips": [ "10.200.0.2/24" ],
+              "mac": "c2:b0:57:49:47:f3"
+            },
+            { "name": "macvlan202",
+              "ips": [ "10.200.0.3/24" ],
+              "mac": "c2:b0:57:49:47:f4"
+            },
+            { "name": "macvlan203",
+              "ips": [ "10.200.0.4/24" ],
+              "mac": "c2:b0:57:49:47:f5"
+            },
+            { "name": "macvlan204",
+              "ips": [ "10.200.0.5/24" ],
+              "mac": "c2:b0:57:49:47:f6"
+            },
+            { "name": "macvlan205",
+              "ips": [ "10.200.0.6/24" ],
+              "mac": "c2:b0:57:49:47:f7"
+            }
+            ]'
+spec:
+  hostAliases:
+  - ip: "10.200.0.253"
+    hostnames:
+    - "hello"
+  containers:
+  - name: teszt
+    image: levess007/myubuntu
+    ports:
+    - containerPort: 80
+#     lifecycle:
+#       preStop:
+#         exec:
+#           command: ["/usr/sbin/nginx","-s","quit"]
+    securityContext:
+      capabilities:
+        add:
+          - ALL
+      privileged: true
